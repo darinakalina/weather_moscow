@@ -1,4 +1,67 @@
-﻿@{
+﻿@model IEnumerable<WeatherInfo.Models.Weather>
+
+@{
     ViewBag.Title = "Просмотр архивов погодных условий в г. Москве";
 }
 <h2>@ViewBag.Title</h2>
+<p>Значения столбцов: T- температура воздуха, гр. Ц.; Td - точка росы, гр. Ц.; 
+    h - нижняя граница облачности, м; VV - горизонтальная видимость, км </p>
+<table class="table">
+    <tr class="header">
+        <td><p><b>Дата</b></p></td>
+        <td><p><b>Время (московское)</b></p></td>
+        <td><p><b>T</b></p></td>
+        <td><p><b>Отн. влажность воздуха, %</b></p></td>
+        <td><p><b>Td</b></p></td>
+        <td><p><b>Атм. давление, мм. рт. ст.</b></p></td>
+        <td><p><b>Направление ветра</b></p></td>
+        <td><p><b>Скорость ветра, м/с</b></p></td>
+        <td><p><b>Облачность, %</b></p></td>
+        <td><p><b>h</b></p></td>
+        <td><p><b>VV</b></p></td>
+        <td><p><b>Погодные явления</b></p></td>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Temperature)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RelativeHumidity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DewPoint)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pressure)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WindDirection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WindVelocity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Claudage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClaudageLowBound)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HorizontallVisibility)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WeatherConditions)
+            </td>
+        </tr>
+    }
+
+</table>
