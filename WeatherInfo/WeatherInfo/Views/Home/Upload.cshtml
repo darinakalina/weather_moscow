@@ -1,4 +1,19 @@
-﻿@{
+﻿@model WeatherInfo.Models.Archives
+@{
     ViewBag.Title = "Загрузка архивов погодных условий в г. Москве";
 }
 <h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table>
+        <tr>
+            <td>Выберете файлы:</td>
+            <td><input type="file" name="Files" id="Files" multiple /></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" name="submit" value="Загрузить" /></td>
+        </tr>
+    </table>
+}
