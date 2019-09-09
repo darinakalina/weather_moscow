@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.IO;
 using System.Web.Mvc;
+using PagedList.Mvc;
+using PagedList;
 using WeatherInfo.Models;
 
 namespace WeatherInfo.Controllers
@@ -16,11 +18,47 @@ namespace WeatherInfo.Controllers
             return View();
         }
 
-        public ActionResult Visualize()
+        [HttpGet]
+        public ActionResult Visualize(int? month, int? year, int? page)
         {
-            return View(_db.Weathers.ToList());
+            int pageSize = 10;
+            int pageNumber = page.HasValue ? Convert.ToInt32(page) : 1;
+            IPagedList<Weather> weathersInfo;
+   
+            ViewBag.month = month;
+            ViewBag.year = year;
+
+            if (year == null && month == null)
+            {
+                weathersInfo = _db.Weathers.ToList().ToPagedList<Weather>(pageNumber, pageSize);
+            }
+            else if (year == null && month != null)
+            {
+                // error
+                throw new Exception("TODO!!!");
+            } 
+            else if (year != null && month == null)
+            {
+                weathersInfo = _db.Weathers.Where(m => m.Date.Year == year)
+                    .OrderBy(m => m.Date.Year)
+                    .ToPagedList(pageNumber, pageSize);
+            }
+            else
+            {
+                weathersInfo = _db.Weathers.Where(m => (m.Date.Year == year && m.Date.Month == month))
+                    .OrderBy(m => m.Date.Year)
+                    .ToPagedList(pageNumber, pageSize);
+            }
+            return View(weathersInfo);
         }
 
+        [HttpPost]
+        public ActionResult Visualize(int? month, int? year)
+        {
+            return RedirectToAction("Visualize", new { page=1, month=month, year=year });
+        }
+
+        [HttpGet]
         public ActionResult Upload()
         {
             return View();
