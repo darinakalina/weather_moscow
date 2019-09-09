@@ -8,57 +8,57 @@
     h - нижняя граница облачности, м; VV - горизонтальная видимость, км </p>
 <table class="table">
     <tr class="header">
-        <td><p><b>Дата</b></p></td>
-        <td><p><b>Время (московское)</b></p></td>
-        <td><p><b>T</b></p></td>
-        <td><p><b>Отн. влажность воздуха, %</b></p></td>
-        <td><p><b>Td</b></p></td>
-        <td><p><b>Атм. давление, мм. рт. ст.</b></p></td>
-        <td><p><b>Направление ветра</b></p></td>
-        <td><p><b>Скорость ветра, м/с</b></p></td>
-        <td><p><b>Облачность, %</b></p></td>
-        <td><p><b>h</b></p></td>
-        <td><p><b>VV</b></p></td>
-        <td><p><b>Погодные явления</b></p></td>
+        <td align="center"><p><b>Дата</b></p></td>
+        <td align="center"><p><b>Время (московское)</b></p></td>
+        <td align="center"><p><b>T</b></p></td>
+        <td align="center"><p><b>Отн. влажность воздуха, %</b></p></td>
+        <td align="center"><p><b>Td</b></p></td>
+        <td align="center"><p><b>Атм. давление, мм. рт. ст.</b></p></td>
+        <td align="center"><p><b>Направление ветра</b></p></td>
+        <td align="center"><p><b>Скорость ветра, м/с</b></p></td>
+        <td align="center"><p><b>Облачность, %</b></p></td>
+        <td align="center"><p><b>h</b></p></td>
+        <td align="center"><p><b>VV</b></p></td>
+        <td align="center"><p><b>Погодные явления</b></p></td>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.Time)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.Temperature)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.RelativeHumidity)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.DewPoint)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.Pressure)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.WindDirection)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.WindVelocity)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.Claudage)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.ClaudageLowBound)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.HorizontallVisibility)
             </td>
-            <td>
+            <td align="center">
                 @Html.DisplayFor(modelItem => item.WeatherConditions)
             </td>
         </tr>

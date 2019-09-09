@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="388cc04769974c3caca1cc9595c75fa1" Name="Diagram1">
+      <Diagram DiagramId="e9c09cfcafd643f3862fe4aa98fee8e1" Name="Diagram1">
         <EntityTypeShape EntityType="WeatherInfo.Models.Weather" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>

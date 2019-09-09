@@ -16,10 +16,10 @@
           <Property Name="RelativeHumidity" Type="float" Nullable="false" />
           <Property Name="DewPoint" Type="float" Nullable="false" />
           <Property Name="Pressure" Type="int" Nullable="false" />
-          <Property Name="WindDirection" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="WindDirection" Type="nvarchar" MaxLength="10" />
           <Property Name="WindVelocity" Type="int" />
           <Property Name="Claudage" Type="int" />
-          <Property Name="ClaudageLowBound" Type="int" Nullable="false" />
+          <Property Name="ClaudageLowBound" Type="int" />
           <Property Name="HorizontallVisibility" Type="int" />
           <Property Name="WeatherConditions" Type="nvarchar" MaxLength="50" />
         </EntityType>
@@ -42,15 +42,15 @@
           <Property Name="RelativeHumidity" Type="Double" Nullable="false" />
           <Property Name="DewPoint" Type="Double" Nullable="false" />
           <Property Name="Pressure" Type="Int32" Nullable="false" />
-          <Property Name="WindDirection" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="WindDirection" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="WindVelocity" Type="Int32" />
           <Property Name="Claudage" Type="Int32" />
-          <Property Name="ClaudageLowBound" Type="Int32" Nullable="false" />
+          <Property Name="ClaudageLowBound" Type="Int32" />
           <Property Name="HorizontallVisibility" Type="Int32" />
-          <Property Name="WeatherConditions" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WeatherConditions" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="WeatherDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="WeatherInfo" EntityType="Self.Weather" />
+          <EntitySet Name="Weathers" EntityType="Self.Weather" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -58,7 +58,7 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="WeatherInfoModelsStoreContainer" CdmEntityContainer="WeatherDBEntities">
-          <EntitySetMapping Name="WeatherInfo">
+          <EntitySetMapping Name="Weathers">
             <EntityTypeMapping TypeName="WeatherInfo.Models.Weather">
               <MappingFragment StoreEntitySet="Weather">
                 <ScalarProperty Name="Id" ColumnName="Id" />

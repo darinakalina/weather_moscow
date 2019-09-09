@@ -59,7 +59,7 @@ namespace WeatherInfo.Models
             weather.WindDirection = ColStringValue(row, Column.WindDirection);
             weather.WindVelocity = ColNullableIntValue(row, Column.WindVelocity);
             weather.Claudage = ColNullableIntValue(row, Column.Claudage);
-            weather.ClaudageLowBound = ColIntValue(row, Column.ClaudageLowBound);
+            weather.ClaudageLowBound = ColNullableIntValue(row, Column.ClaudageLowBound);
             weather.HorizontallVisibility = ColNullableIntValue(row, Column.HorizontallVisibility);
             weather.WeatherConditions = ColStringValue(row, Column.WeatherConditions);
             return weather;
@@ -113,6 +113,7 @@ namespace WeatherInfo.Models
 
         private int ColIntValue(IRow row, Column col)
         {
+           
             Nullable<int> res = ColNullableIntValue(row, col);
            
             if (res == null)
@@ -141,7 +142,8 @@ namespace WeatherInfo.Models
 
         private string ColStringValue(IRow row, Column col)
         {
-            return row.GetCell((int)col).StringCellValue;
+            DataFormatter formatter = new DataFormatter();
+            return formatter.FormatCellValue(row.GetCell((int)col));
         }
 
         private WeatherParseException CreateInvalidFormatException(string type, string value, Column col)

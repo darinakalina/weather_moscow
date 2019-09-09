@@ -185,30 +185,33 @@
     <Compile Include="Models\Archives.cs" />
     <Compile Include="Models\Parser.cs" />
     <Compile Include="Models\Weather.cs">
-      <DependentUpon>WeatherInfoDBModel.tt</DependentUpon>
+      <DependentUpon>WeatherDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\WeatherInfoDBModel.Context.cs">
+    <Compile Include="Models\WeatherDBModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WeatherInfoDBModel.Context.tt</DependentUpon>
+      <DependentUpon>WeatherDBModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\WeatherInfoDBModel.cs">
+    <Compile Include="Models\WeatherDBModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WeatherInfoDBModel.tt</DependentUpon>
+      <DependentUpon>WeatherDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\WeatherInfoDBModel.Designer.cs">
+    <Compile Include="Models\WeatherDBModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WeatherInfoDBModel.edmx</DependentUpon>
+      <DependentUpon>WeatherDBModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\WeatherParseException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\WeatherDB.mdf" />
+    <Content Include="App_Data\WeatherDB.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\WeatherDB_log.ldf">
       <DependentUpon>WeatherDB.mdf</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -216,15 +219,15 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\WeatherInfoDBModel.Context.tt">
+    <Content Include="Models\WeatherDBModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>WeatherInfoDBModel.edmx</DependentUpon>
-      <LastGenOutput>WeatherInfoDBModel.Context.cs</LastGenOutput>
+      <DependentUpon>WeatherDBModel.edmx</DependentUpon>
+      <LastGenOutput>WeatherDBModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\WeatherInfoDBModel.tt">
+    <Content Include="Models\WeatherDBModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>WeatherInfoDBModel.edmx</DependentUpon>
-      <LastGenOutput>WeatherInfoDBModel.cs</LastGenOutput>
+      <DependentUpon>WeatherDBModel.edmx</DependentUpon>
+      <LastGenOutput>WeatherDBModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
@@ -233,12 +236,12 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="Models\WeatherInfoDBModel.edmx">
+    <EntityDeploy Include="Models\WeatherDBModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>WeatherInfoDBModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>WeatherDBModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\WeatherInfoDBModel.edmx.diagram">
-      <DependentUpon>WeatherInfoDBModel.edmx</DependentUpon>
+    <Content Include="Models\WeatherDBModel.edmx.diagram">
+      <DependentUpon>WeatherDBModel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

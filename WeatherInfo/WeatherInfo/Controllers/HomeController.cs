@@ -18,7 +18,7 @@ namespace WeatherInfo.Controllers
 
         public ActionResult Visualize()
         {
-            return View(_db.WeatherInfo.ToList());
+            return View(_db.Weathers.ToList());
         }
 
         public ActionResult Upload()
@@ -38,23 +38,25 @@ namespace WeatherInfo.Controllers
                 {
                     if (file.ContentLength > 0)
                     {
-                        _db.WeatherInfo.AddRange(parser.Parse(file.InputStream));
+                        _db.Configuration.ValidateOnSaveEnabled = false;
+                        _db.Configuration.AutoDetectChangesEnabled = false;
+                        _db.Weathers.AddRange(parser.Parse(file.InputStream));
+                        _db.Configuration.AutoDetectChangesEnabled = true;
+                        _db.SaveChanges();
                     }
                 }
             }
             catch (WeatherParseException ex)
             {
                 transaction.Rollback();
-                Console.WriteLine(ex.ToString());
                 return RedirectToAction("Upload");
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
-                Console.WriteLine(ex.ToString());
                 return RedirectToAction("Upload");
             }
-
+            
             transaction.Commit();
             return RedirectToAction("Upload");
         }

@@ -25,6 +25,6 @@ namespace WeatherInfo.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Weather> WeatherInfo { get; set; }
+        public virtual DbSet<Weather> Weathers { get; set; }
     }
 }

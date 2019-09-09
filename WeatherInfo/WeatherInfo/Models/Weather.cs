@@ -16,7 +16,6 @@ namespace WeatherInfo.Models
     public partial class Weather
     {
         public int Id { get; set; }
-
         [DisplayFormat(DataFormatString = "{0:d}")]
         public System.DateTime Date { get; set; }
         public System.TimeSpan Time { get; set; }
@@ -27,7 +26,7 @@ namespace WeatherInfo.Models
         public string WindDirection { get; set; }
         public Nullable<int> WindVelocity { get; set; }
         public Nullable<int> Claudage { get; set; }
-        public int ClaudageLowBound { get; set; }
+        public Nullable<int> ClaudageLowBound { get; set; }
         public Nullable<int> HorizontallVisibility { get; set; }
         public string WeatherConditions { get; set; }
     }
