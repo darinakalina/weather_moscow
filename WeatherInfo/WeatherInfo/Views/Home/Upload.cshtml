@@ -16,4 +16,8 @@
             <td><input type="submit" name="submit" value="Загрузить"/></td>
         </tr>
     </table>
+    if (Model != null && Model.errorDescription != null)
+    {
+        <font size="3" color="red">@Model.errorDescription</font>
+    }
 }

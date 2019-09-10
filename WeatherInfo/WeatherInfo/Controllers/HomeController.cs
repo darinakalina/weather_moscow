@@ -12,44 +12,43 @@ namespace WeatherInfo.Controllers
 {
     public class HomeController : Controller
     {
-        private WeatherDBEntities _db = new WeatherDBEntities();
+        private WeatherDBEntities db = new WeatherDBEntities();
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpGet]
         public ActionResult Visualize(int? month, int? year, int? page)
         {
             int pageSize = 10;
             int pageNumber = page.HasValue ? Convert.ToInt32(page) : 1;
-            IPagedList<Weather> weathersInfo;
-   
-            ViewBag.month = month;
-            ViewBag.year = year;
+
+            WeatherInfoViewModel model = new WeatherInfoViewModel();
+            model.weatherInfo = db.Weathers.Where(m => false).ToPagedList(pageNumber, pageSize);
+            model.month = month;
+            model.year = year;
 
             if (year == null && month == null)
             {
-                weathersInfo = _db.Weathers.ToList().ToPagedList<Weather>(pageNumber, pageSize);
+                model.weatherInfo = db.Weathers.ToList().ToPagedList<Weather>(pageNumber, pageSize);
             }
             else if (year == null && month != null)
             {
-                // error
-                throw new Exception("TODO!!!");
+                model.errorMessage = "Specify year";
             } 
             else if (year != null && month == null)
             {
-                weathersInfo = _db.Weathers.Where(m => m.Date.Year == year)
+                model.weatherInfo = db.Weathers.Where(m => m.Date.Year == year)
                     .OrderBy(m => m.Date.Year)
                     .ToPagedList(pageNumber, pageSize);
             }
             else
             {
-                weathersInfo = _db.Weathers.Where(m => (m.Date.Year == year && m.Date.Month == month))
+                model.weatherInfo = db.Weathers.Where(m => (m.Date.Year == year && m.Date.Month == month))
                     .OrderBy(m => m.Date.Year)
                     .ToPagedList(pageNumber, pageSize);
             }
-            return View(weathersInfo);
+            return View(model);
         }
 
         [HttpPost]
@@ -58,7 +57,6 @@ namespace WeatherInfo.Controllers
             return RedirectToAction("Visualize", new { page=1, month=month, year=year });
         }
 
-        [HttpGet]
         public ActionResult Upload()
         {
             return View();
@@ -68,35 +66,37 @@ namespace WeatherInfo.Controllers
         public ActionResult Upload(Archives archives)
         {
             Parser parser = new Parser();
-            var transaction = _db.Database.BeginTransaction();
 
+            var transaction = db.Database.BeginTransaction();
             try
             {
                 foreach (var file in archives.Files)
                 {
                     if (file.ContentLength > 0)
                     {
-                        _db.Configuration.ValidateOnSaveEnabled = false;
-                        _db.Configuration.AutoDetectChangesEnabled = false;
-                        _db.Weathers.AddRange(parser.Parse(file.InputStream));
-                        _db.Configuration.AutoDetectChangesEnabled = true;
-                        _db.SaveChanges();
+                        db.Configuration.ValidateOnSaveEnabled = false;
+                        db.Configuration.AutoDetectChangesEnabled = false;
+                        db.Weathers.AddRange(parser.Parse(file.InputStream));
+                        db.Configuration.AutoDetectChangesEnabled = true;
+                        db.SaveChanges();
                     }
                 }
             }
             catch (WeatherParseException ex)
             {
                 transaction.Rollback();
-                return RedirectToAction("Upload");
+                archives.errorDescription = ex.Message.ToString();
+                return View(archives);
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
-                return RedirectToAction("Upload");
+                archives.errorDescription = ex.Message.ToString();
+                return View(archives);
             }
             
             transaction.Commit();
-            return RedirectToAction("Upload");
+            return View(archives);
         }
     }
 }

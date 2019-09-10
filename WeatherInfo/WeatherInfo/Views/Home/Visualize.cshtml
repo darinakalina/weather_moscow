@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<WeatherInfo.Models.Weather>
+﻿@model WeatherInfo.Models.WeatherInfoViewModel
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -13,95 +13,135 @@
     <table>
         <tr>
             <td>
-                <input type="text" name="year" />
+                @{ 
+                    string year;
+
+                    if (Model.year != null)
+                    {
+                        year = Model.year.ToString();
+                    }
+                    else
+                    {
+                        year = "Год";
+                    }
+                } 
+
+                <input type="text" name="year" size="8" value=@year />
             </td>
             <td>
+                @{
+                    var months = new string[]
+                    {
+                        "Январь",
+                        "Февраль",
+                        "Март",
+                        "Апрель",
+                        "Май",
+                        "Июнь",
+                        "Июль",
+                        "Август",
+                        "Сентябрь",
+                        "Октябрь",
+                        "Ноябрь",
+                        "Декабрь"
+                    };
+                    var selectInfo = new List<Tuple<String, String, Boolean>>();
+                    selectInfo.Add(Tuple.Create("", "", false));
+
+                    for (int i = 0; i < months.Length; ++i)
+                    {
+                        selectInfo.Add(Tuple.Create((i + 1).ToString(), months[i], Model.month != null && i + 1 == Model.month));
+                    }
+               }
+
                 <select name="month">
-                    <option value=""></option>
-                    <option value="1">Январь</option>
-                    <option value="2">Февраль</option>
-                    <option value="3">Март</option>
-                    <option value="4">Апрель</option>
-                    <option value="5">Май</option>
-                    <option value="6">Июнь</option>
-                    <option value="7">Июль</option>
-                    <option value="8">Август</option>
-                    <option value="9">Сентябрь</option>
-                    <option value="10">Октябрь</option>
-                    <option value="11">Ноябрь</option>
-                    <option value="12">Декабрь</option>
+                    @foreach (var s in selectInfo)
+                    {
+                        if (!s.Item3)
+                        {
+                            <option value=@s.Item1>@s.Item2</option>
+                        }
+                        else
+                        {
+                            <option selected value=@s.Item1>@s.Item2</option>
+                        }
+                    }
                 </select>
             </td>
-            <td><input type="submit" name="search" value="Поиск" /></td>
+            <td><input type="submit" name="search" value="Поиск"/></td>
         </tr>
     </table>
 
-
-    <p>
-        Значения столбцов: T- температура воздуха, гр. Ц.; Td - точка росы, гр. Ц.;
-        h - нижняя граница облачности, м; VV - горизонтальная видимость, км
-    </p>
-    <table class="table">
-        <tr class="header">
-            <td align="center"><p><b>Дата</b></p></td>
-            <td align="center"><p><b>Время (московское)</b></p></td>
-            <td align="center"><p><b>T</b></p></td>
-            <td align="center"><p><b>Отн. влажность воздуха, %</b></p></td>
-            <td align="center"><p><b>Td</b></p></td>
-            <td align="center"><p><b>Атм. давление, мм. рт. ст.</b></p></td>
-            <td align="center"><p><b>Направление ветра</b></p></td>
-            <td align="center"><p><b>Скорость ветра, м/с</b></p></td>
-            <td align="center"><p><b>Облачность, %</b></p></td>
-            <td align="center"><p><b>h</b></p></td>
-            <td align="center"><p><b>VV</b></p></td>
-            <td align="center"><p><b>Погодные явления</b></p></td>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.Time)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.Temperature)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.RelativeHumidity)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.DewPoint)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.Pressure)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.WindDirection)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.WindVelocity)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.Claudage)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.ClaudageLowBound)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.HorizontallVisibility)
-                </td>
-                <td align="center">
-                    @Html.DisplayFor(modelItem => item.WeatherConditions)
-                </td>
+    if (Model.errorMessage != null)
+    {
+        <font size="3" color="red">@Model.errorMessage</font>
+    }
+    else
+    {
+        <p>
+            Значения столбцов: T- температура воздуха, гр. Ц.; Td - точка росы, гр. Ц.;
+            h - нижняя граница облачности, м; VV - горизонтальная видимость, км
+        </p>
+        <table class="table">
+            <tr class="header">
+                <td align="center"><p><b>Дата</b></p></td>
+                <td align="center"><p><b>Время (московское)</b></p></td>
+                <td align="center"><p><b>T</b></p></td>
+                <td align="center"><p><b>Отн. влажность воздуха, %</b></p></td>
+                <td align="center"><p><b>Td</b></p></td>
+                <td align="center"><p><b>Атм. давление, мм. рт. ст.</b></p></td>
+                <td align="center"><p><b>Направление ветра</b></p></td>
+                <td align="center"><p><b>Скорость ветра, м/с</b></p></td>
+                <td align="center"><p><b>Облачность, %</b></p></td>
+                <td align="center"><p><b>h</b></p></td>
+                <td align="center"><p><b>VV</b></p></td>
+                <td align="center"><p><b>Погодные явления</b></p></td>
             </tr>
-        }
 
-    </table>
-    <br />
+            @foreach (var item in Model.weatherInfo)
+            {
+                <tr>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.Time)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.Temperature)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.RelativeHumidity)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.DewPoint)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.Pressure)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.WindDirection)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.WindVelocity)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.Claudage)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.ClaudageLowBound)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.HorizontallVisibility)
+                    </td>
+                    <td align="center">
+                        @Html.DisplayFor(modelItem => item.WeatherConditions)
+                    </td>
+                </tr>
+            }
+            </table>
+
+           <p>Страница @(Model.weatherInfo.PageCount < Model.weatherInfo.PageNumber ? 0 : Model.weatherInfo.PageNumber) из @Model.weatherInfo.PageCount</p>
+            @Html.PagedListPager(Model.weatherInfo, page => Url.Action("Visualize", new { page, month = Model.month, year = Model.year }))
+    }
 }
-
-Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Visualize", new { page, month=ViewBag.month, year=ViewBag.year}))

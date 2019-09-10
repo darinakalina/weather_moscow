@@ -8,5 +8,6 @@ namespace WeatherInfo.Models
     public class Archives
     {
         public IEnumerable<HttpPostedFileBase> Files { get; set; }
+        public string errorDescription { get; set; }
     }
 }
