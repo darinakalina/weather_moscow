@@ -7,12 +7,15 @@ using System.Web.Mvc;
 using PagedList.Mvc;
 using PagedList;
 using WeatherInfo.Models;
+using System.Threading.Tasks;
+using System.Activities;
+using System.EnterpriseServices;
+using System.Transactions;
 
 namespace WeatherInfo.Controllers
 {
     public class HomeController : Controller
     {
-        private WeatherDBEntities db = new WeatherDBEntities();
         public ActionResult Index()
         {
             return View();
@@ -23,32 +26,42 @@ namespace WeatherInfo.Controllers
             int pageSize = 10;
             int pageNumber = page.HasValue ? Convert.ToInt32(page) : 1;
 
-            WeatherInfoViewModel model = new WeatherInfoViewModel();
-            model.weatherInfo = db.Weathers.Where(m => false).ToPagedList(pageNumber, pageSize);
-            model.month = month;
-            model.year = year;
+            var txOptions = new System.Transactions.TransactionOptions();
+            txOptions.IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted;
 
-            if (year == null && month == null)
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required, txOptions))
             {
-                model.weatherInfo = db.Weathers.ToList().ToPagedList<Weather>(pageNumber, pageSize);
+                using (var context = new WeatherDBEntities())
+                {
+                    WeatherInfoViewModel model = new WeatherInfoViewModel();
+                    model.weatherInfo = context.Weathers.Where(m => false).ToPagedList(pageNumber, pageSize);
+                    model.month = month;
+                    model.year = year;
+
+                    if (year == null && month == null)
+                    {
+                        model.weatherInfo = context.Weathers.ToList().ToPagedList<Weather>(pageNumber, pageSize);
+                    }
+                    else if (year == null && month != null)
+                    {
+                        model.errorMessage = "Specify year";
+                    }
+                    else if (year != null && month == null)
+                    {
+                        model.weatherInfo = context.Weathers.Where(m => m.Date.Year == year)
+                            .OrderBy(m => m.Date.Year)
+                            .ToPagedList(pageNumber, pageSize);
+                    }
+                    else
+                    {
+                        model.weatherInfo = context.Weathers.Where(m => (m.Date.Year == year && m.Date.Month == month))
+                            .OrderBy(m => m.Date.Year)
+                            .ToPagedList(pageNumber, pageSize);
+                    }
+
+                    return View(model);
+                }
             }
-            else if (year == null && month != null)
-            {
-                model.errorMessage = "Specify year";
-            } 
-            else if (year != null && month == null)
-            {
-                model.weatherInfo = db.Weathers.Where(m => m.Date.Year == year)
-                    .OrderBy(m => m.Date.Year)
-                    .ToPagedList(pageNumber, pageSize);
-            }
-            else
-            {
-                model.weatherInfo = db.Weathers.Where(m => (m.Date.Year == year && m.Date.Month == month))
-                    .OrderBy(m => m.Date.Year)
-                    .ToPagedList(pageNumber, pageSize);
-            }
-            return View(model);
         }
 
         [HttpPost]
@@ -67,35 +80,37 @@ namespace WeatherInfo.Controllers
         {
             Parser parser = new Parser();
 
-            var transaction = db.Database.BeginTransaction();
+            var weatherInfoList = new List<Weather>();
+
             try
             {
                 foreach (var file in archives.Files)
                 {
                     if (file.ContentLength > 0)
                     {
-                        db.Configuration.ValidateOnSaveEnabled = false;
-                        db.Configuration.AutoDetectChangesEnabled = false;
-                        db.Weathers.AddRange(parser.Parse(file.InputStream));
-                        db.Configuration.AutoDetectChangesEnabled = true;
-                        db.SaveChanges();
+                        weatherInfoList.AddRange(parser.Parse(file.InputStream));
                     }
                 }
             }
-            catch (WeatherParseException ex)
-            {
-                transaction.Rollback();
-                archives.errorDescription = ex.Message.ToString();
-                return View(archives);
-            }
             catch (Exception ex)
             {
-                transaction.Rollback();
                 archives.errorDescription = ex.Message.ToString();
                 return View(archives);
             }
-            
-            transaction.Commit();
+
+            Task.Run(() =>
+            {
+                using (var context = new WeatherDBEntities())
+                {
+                    using (var transaction = context.Database.BeginTransaction())
+                    {
+                        context.Weathers.AddRange(weatherInfoList);
+                        context.SaveChanges();
+                        transaction.Commit();
+                    }
+                }
+            });
+
             return View(archives);
         }
     }

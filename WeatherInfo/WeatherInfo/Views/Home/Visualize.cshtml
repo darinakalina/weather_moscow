@@ -13,20 +13,17 @@
     <table>
         <tr>
             <td>
-                @{ 
-                    string year;
-
+                @{
                     if (Model.year != null)
                     {
-                        year = Model.year.ToString();
+                        <input type="text" name="year" size="8" value=@Model.year />
                     }
                     else
                     {
-                        year = "Год";
+                        <input type="text" name="year" size="8"/>
                     }
                 } 
 
-                <input type="text" name="year" size="8" value=@year />
             </td>
             <td>
                 @{
